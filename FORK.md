@@ -9,8 +9,10 @@ The models are [TencentARC Pixal3D](https://github.com/TencentARC/Pixal3D) and
 
 Branch `local-pixal3d` adds only small local conveniences, used on Apple Silicon (macOS, Metal):
 
-- The desktop app is renamed **Pixal3D Studio** (upstream: Trellis Studio) so it is not confused
-  with a separate TRELLIS.2 tool on the same machine. It builds and runs on macOS arm64 from source
+- Programs renamed to **`pixal3d-cli` / `pixal3d-server`** and the desktop app to **Pixal3D Studio**
+  (upstream: trellis-cli / trellis-server / Trellis Studio; config in `~/Library/Application Support/pixal3d-studio/`),
+  so they are not confused with a separate TRELLIS.2 tool on the same machine. `README.md` is rewritten
+  for this build; the original is `UPSTREAM_README.md`. It builds and runs on macOS arm64 from source
   (`cd app && npm ci && npm exec -- tauri build --bundles app`).
 - `pixal3d.sh` — a wrapper for the canonical 4-view rig
   (`01_front 02_right 03_back 04_left`, `--mesh-scale 1.0`, default `--res 1536`).

@@ -91,7 +91,7 @@ export function mountTrellis2MvPanel(root: HTMLElement): void {
     const cap = gateState().capabilities;
     if (!cap) {
       return gateState().serverOnline
-        ? { ok: false, text: "This runtime does not advertise TRELLIS.2 multiview; update trellis-server." }
+        ? { ok: false, text: "This runtime does not advertise TRELLIS.2 multiview; update pixal3d-server." }
         : { ok: false, text: "Server is offline." };
     }
     if (!cap.trellis2_mv?.available) {

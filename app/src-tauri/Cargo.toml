@@ -1,5 +1,5 @@
 [package]
-name = "trellis-studio"
+name = "pixal3d-studio"
 version = "0.10.0"
 description = "Pixal3D Studio — local image→3D generation UI for trellis.cpp"
 authors = ["trellis.cpp"]

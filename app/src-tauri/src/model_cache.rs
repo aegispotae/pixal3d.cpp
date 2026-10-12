@@ -41,7 +41,7 @@ fn managed_root_named(leaf: &str) -> Result<PathBuf, String> {
         }
     }
     dirs::data_local_dir()
-        .map(|d| d.join("trellis-studio").join(leaf))
+        .map(|d| d.join("pixal3d-studio").join(leaf))
         .ok_or_else(|| "could not determine managed model cache directory".to_string())
 }
 

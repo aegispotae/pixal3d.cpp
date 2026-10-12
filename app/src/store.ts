@@ -10,7 +10,7 @@
 
 import type { GenRecord } from "./types";
 
-const DB_NAME = "trellis-studio";
+const DB_NAME = "pixal3d-studio";
 const DB_VERSION = 1;
 const STORE = "generations";
 

@@ -137,7 +137,7 @@ fn log_file_name(secs: u64) -> String {
     let (y, m, d) = civil_from_days((secs / 86400) as i64);
     let tod = secs % 86400;
     format!(
-        "trellis-server-{y:04}{m:02}{d:02}-{:02}{:02}{:02}.log",
+        "pixal3d-server-{y:04}{m:02}{d:02}-{:02}{:02}{:02}.log",
         tod / 3600,
         (tod % 3600) / 60,
         tod % 60
@@ -154,7 +154,7 @@ fn prune_logs(dir: &std::path::Path, keep: usize) {
             .filter(|p| {
                 p.file_name()
                     .and_then(|n| n.to_str())
-                    .map(|n| n.starts_with("trellis-server-") && n.ends_with(".log"))
+                    .map(|n| n.starts_with("pixal3d-server-") && n.ends_with(".log"))
                     .unwrap_or(false)
             })
             .collect(),

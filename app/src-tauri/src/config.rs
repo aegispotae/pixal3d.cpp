@@ -1,6 +1,6 @@
 // config.json is the contract between the installer (writer) and the app
-// (reader). In an installed build it lives at <config_dir>/trellis-studio/ —
-// ~/.config/trellis-studio/ on Linux, %APPDATA%\trellis-studio\ on Windows.
+// (reader). In an installed build it lives at <config_dir>/pixal3d-studio/ —
+// ~/.config/pixal3d-studio/ on Linux, %APPDATA%\pixal3d-studio\ on Windows.
 //
 // PORTABLE MODE: if a `portable.dat` marker sits next to the executable (as in
 // the portable .zip / .tar.gz), everything lives next to the exe instead —
@@ -61,20 +61,20 @@ fn portable_root() -> Option<PathBuf> {
 
 fn server_bin_name() -> &'static str {
     if cfg!(windows) {
-        "trellis-server.exe"
+        "pixal3d-server.exe"
     } else {
-        "trellis-server"
+        "pixal3d-server"
     }
 }
 
 /// Default location for generated GLBs: <exe>/nfs/output in portable mode, else
-/// <local-data>/trellis-studio/output (%LOCALAPPDATA%\... / ~/.local/share/...).
+/// <local-data>/pixal3d-studio/output (%LOCALAPPDATA%\... / ~/.local/share/...).
 pub fn default_output_dir() -> String {
     if let Some(root) = portable_root() {
         return root.join("data").join("output").to_string_lossy().into_owned();
     }
     dirs::data_local_dir()
-        .map(|d| d.join("trellis-studio").join("output"))
+        .map(|d| d.join("pixal3d-studio").join("output"))
         .map(|p| p.to_string_lossy().into_owned())
         .unwrap_or_default()
 }
@@ -94,13 +94,13 @@ pub fn resolve_output_dir() -> Result<PathBuf, String> {
 }
 
 /// Where server launch logs are written: <exe>/nfs/logs in portable mode, else
-/// <local-data>/trellis-studio/logs. Mirrors `default_output_dir()`.
+/// <local-data>/pixal3d-studio/logs. Mirrors `default_output_dir()`.
 pub fn logs_dir() -> String {
     if let Some(root) = portable_root() {
         return root.join("data").join("logs").to_string_lossy().into_owned();
     }
     dirs::data_local_dir()
-        .map(|d| d.join("trellis-studio").join("logs"))
+        .map(|d| d.join("pixal3d-studio").join("logs"))
         .map(|p| p.to_string_lossy().into_owned())
         .unwrap_or_default()
 }
@@ -120,7 +120,7 @@ pub fn config_path() -> Option<PathBuf> {
     if let Some(root) = portable_root() {
         return Some(root.join("data").join("config.json"));
     }
-    dirs::config_dir().map(|d| d.join("trellis-studio").join("config.json"))
+    dirs::config_dir().map(|d| d.join("pixal3d-studio").join("config.json"))
 }
 
 fn load_from_file() -> Option<Config> {

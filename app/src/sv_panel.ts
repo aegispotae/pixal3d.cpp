@@ -109,7 +109,7 @@ export function mountSvPanel(root: HTMLElement): void {
     const cap = gateState().capabilities;
     if (!cap) {
       return gateState().serverOnline
-        ? { ok: false, text: "This runtime does not report /capabilities (pre-0.10.0 trellis-server) — single view needs the 0.10.0 runtime." }
+        ? { ok: false, text: "This runtime does not report /capabilities (pre-0.10.0 pixal3d-server) — single view needs the 0.10.0 runtime." }
         : { ok: false, text: "Server is offline." };
     }
     if (!cap.sv.configured) return { ok: false, text: "Single-view model set is not installed. Add it with the installer (--model-manifest-sv) or set the SV models directory in Settings." };

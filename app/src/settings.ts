@@ -88,7 +88,7 @@ export async function renderSettings(body: HTMLElement, onSaved: () => void): Pr
     (body.querySelector("#set-save") as HTMLButtonElement).onclick = save;
     (body.querySelector("#set-restart") as HTMLButtonElement).onclick = async () => { try { await invoke("restart_server"); } catch {} onSaved(); };
   } else {
-    body.innerHTML = `<div class="kv">Running in a browser — connecting to a trellis-server you launched.</div>${field("Host", "set-host", cfg.host)}${field("Port", "set-port", String(cfg.port), "number")}<div class="modal-actions"><button id="set-save" class="primary">Save</button></div>`;
+    body.innerHTML = `<div class="kv">Running in a browser — connecting to a pixal3d-server you launched.</div>${field("Host", "set-host", cfg.host)}${field("Port", "set-port", String(cfg.port), "number")}<div class="modal-actions"><button id="set-save" class="primary">Save</button></div>`;
     (body.querySelector("#set-save") as HTMLButtonElement).onclick = async () => { const host = (body.querySelector("#set-host") as HTMLInputElement).value.trim() || "127.0.0.1"; const port = parseInt((body.querySelector("#set-port") as HTMLInputElement).value, 10); await saveConfig({ host, port: isNaN(port) ? 8080 : port }); onSaved(); };
   }
 }

@@ -1,4 +1,4 @@
-// Trellis Studio — Tauri v2 desktop shell around the trellis-server image→3D
+// Pixal3D Studio — Tauri v2 desktop shell around the pixal3d-server image→3D
 // pipeline. Reads the installer-written config.json, launches & supervises the
 // server, and exposes a few commands to the web UI.
 #![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
