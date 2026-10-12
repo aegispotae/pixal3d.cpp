@@ -9,6 +9,7 @@
 # (src/transforms_json.cpp:241-244). RAM: 1024 ~4,5 GB, 1536 ~6 GB (Marcus 2026-10-12).
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ $# -lt 2 ]; then sed -n "2,9p" "$0"; exit 2; fi
 VIEWS="$1"; OUT="$2"; RES="${3:-1536}"; shift $(( $# >= 3 ? 3 : 2 ))
 exec "$HERE/build/trellis-cli" --views "$VIEWS" \
     --models "$HERE/../model-cache/pixal3d/pixal3d-q8_0-v1" \
