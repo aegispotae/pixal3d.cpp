@@ -15,6 +15,101 @@ driven end-to-end from a text prompt, with
 > reference implementation at [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2); see
 > [`NOTICE`](NOTICE) for full attribution and [`PIXAL3D.md`](PIXAL3D.md) for what this fork adds.
 
+## macOS (Apple Silicon) quick start — this fork
+
+> Added in the `local-pixal3d` branch of [aegispotae/pixal3d.cpp](https://github.com/aegispotae/pixal3d.cpp).
+> Everything below is upstream work by [raven38/pixal3d.cpp](https://github.com/raven38/pixal3d.cpp) and
+> [pwilkin/trellis.cpp](https://github.com/pwilkin/trellis.cpp); see [`FORK.md`](FORK.md). Tested on an
+> M5 Max (64 GB), macOS, Xcode command line tools, Homebrew `cmake` + `ninja`.
+
+**1. Build the CLI and server (Metal is automatic on macOS)**
+
+```bash
+git clone -b local-pixal3d https://github.com/aegispotae/pixal3d.cpp && cd pixal3d.cpp
+git submodule update --init --depth 1 thirdparty/ggml      # pinned pwilkin/ggml commit
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+# -> build/trellis-cli, build/trellis-server  (names inherited from trellis.cpp)
+```
+
+**2. Download the Pixal3D multiview weights (q8_0, ~7.6 GB) and verify SHA-256**
+
+The file list and hashes are in `models/pixal3d-q8_0-v1/pixal3d-models.json`; the weights live on
+Hugging Face at `raven38/pixal3d-q8_0-v1` (revision `1f82a6b`). Put them anywhere, e.g. `~/models/pixal3d-q8_0-v1`:
+
+```bash
+python3 - <<'EOF'
+import json, subprocess, hashlib, os, pathlib
+dst = pathlib.Path.home() / "models/pixal3d-q8_0-v1"; dst.mkdir(parents=True, exist_ok=True)
+m = json.load(open("models/pixal3d-q8_0-v1/pixal3d-models.json"))
+base = "https://huggingface.co/raven38/pixal3d-q8_0-v1/resolve/1f82a6b7e0b64de4fe7c96c66db7977fc61a1203"
+for f in m["files"]:
+    out = dst / f["name"]
+    if not (out.exists() and out.stat().st_size == f["size_bytes"]):
+        subprocess.run(["curl", "-L", "--fail", "-o", str(out), f"{base}/{f['name']}"], check=True)
+    ok = hashlib.sha256(out.read_bytes()).hexdigest() == f["sha256"]
+    print(f["name"], "OK" if ok else "SHA MISMATCH")
+EOF
+cp models/pixal3d-q8_0-v1/pixal3d-models.json ~/models/pixal3d-q8_0-v1/
+```
+
+**3. Generate from 4 views (canonical rig, no `transforms.json`)**
+
+Put four pre-matted RGBA images (same scale, centered, square) into one folder, named in natural order:
+
+| file | camera | what it must show |
+|---|---|---|
+| `01_front.png` | azim 0 | front |
+| `02_right.png` | azim 90 (camera on +X) | the character's **left** side |
+| `03_back.png` | azim 180 | back |
+| `04_left.png` | azim 270 (camera on −X) | the character's **right** side |
+
+"right/left" are camera positions, not body sides (`src/transforms_json.cpp:241-244`) — easy to mix up.
+
+```bash
+./pixal3d.sh path/to/views out.glb 1536           # wrapper; edit its --models path if needed
+# or directly:
+./build/trellis-cli --views path/to/views --models ~/models/pixal3d-q8_0-v1 \
+    --mesh-scale 1.0 --res 1536 --seed 42 --require-gpu out.glb
+```
+
+`--views` needs `--res 1024` or `1536` (512 has no texture flow). Measured on M5 Max, 4 views:
+**1024 — 146 s, ~4.5 GB peak memory; 1536 — 421 s, ~6 GB.** Output: textured GLB (4096 atlas) + PLY.
+Known output traits: the post-process remesh produces a thin double-walled shell (~2 mm), small details
+(badges, buckles) may break up, and the origin is at the mesh center.
+
+**4. Desktop app — Pixal3D Studio (upstream Trellis Studio, renamed in this fork)**
+
+Upstream does not ship a notarized macOS app; build it locally instead (Rust via `rustup`, Node 20+):
+
+```bash
+cd app
+npm ci
+npm exec -- tauri build --bundles app
+open "src-tauri/target/release/bundle/macos/Pixal3D Studio.app"
+```
+
+The app starts and supervises `trellis-server`; point it at your build and weights in
+`~/Library/Application Support/trellis-studio/config.json` (or via Settings in the app):
+
+```json
+{
+  "serverBin": "/ABSOLUTE/PATH/pixal3d.cpp/build/trellis-server",
+  "modelsDir": "/ABSOLUTE/PATH/models/pixal3d-q8_0-v1",
+  "modelsDirSv": "",
+  "backend": "metal",
+  "host": "127.0.0.1",
+  "port": 7864,
+  "outputDir": "/ABSOLUTE/PATH/output"
+}
+```
+
+Use **Pixal3D multiview** mode: add the four views in the order above, mesh scale `1.0`, resolution
+1024 or 1536. Pick a port that is free on your machine (the upstream default 8080 often is not).
+Quick server check without the app: `./build/trellis-server --models … --port 7864` and
+`curl http://127.0.0.1:7864/capabilities` (`"mv":{"configured":true,…}`).
+
+
 ```
 ./build/trellis-cli assets/goblin.png out/goblin.glb            # one image    -> UV-textured GLB (atlas + PBR)
 ./build/trellis-cli --views views/ --models pixal3d_models \
