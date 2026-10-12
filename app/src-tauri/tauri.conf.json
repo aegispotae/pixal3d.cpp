@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Trellis Studio",
+  "productName": "Pixal3D Studio",
   "version": "0.10.0",
-  "identifier": "cpp.trellis.studio",
+  "identifier": "local.devapp.pixal3d.studio",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Trellis Studio",
+        "title": "Pixal3D Studio",
         "width": 1200,
         "height": 820,
         "minWidth": 900,
@@ -35,6 +35,6 @@
     ],
     "category": "GraphicsAndDesign",
     "shortDescription": "Local image→3D generation",
-    "longDescription": "Trellis Studio runs Microsoft TRELLIS.2 image→3D reconstruction locally via trellis.cpp and previews the result in an interactive 3D viewer."
+    "longDescription": "Pixal3D Studio runs Microsoft TRELLIS.2 image→3D reconstruction locally via trellis.cpp and previews the result in an interactive 3D viewer."
   }
 }

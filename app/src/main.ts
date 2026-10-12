@@ -524,7 +524,7 @@ async function pollHealth(): Promise<void> {
   setupBanner.classList.toggle("hidden", !needSetup);
   if (needSetup) {
     (setupBanner.querySelector("span") as HTMLElement).textContent =
-      "Trellis Studio isn't set up yet — run the installer or point it at your models directory.";
+      "Pixal3D Studio isn't set up yet — run the installer or point it at your models directory.";
   } else if (!ok && cfg.configured) {
     setupBanner.classList.remove("hidden");
     (setupBanner.querySelector("span") as HTMLElement).textContent =
